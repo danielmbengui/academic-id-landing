@@ -172,11 +172,64 @@ h2{font-family:'Space Grotesk';font-weight:600;letter-spacing:-.01em;font-size:c
 footer{padding:36px 8vw;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;color:var(--muted);font-size:12px;font-family:'IBM Plex Mono'}
 
 @media (max-width:880px){
-  .navlinks{display:none}.burger{display:block}
-  .statrow,.bricks,.demo,.secgrid,.tiers,.maprow{grid-template-columns:1fr}
-  section{padding:80px 7vw}
+  .burger{
+    display:block;
+  }
+
+  .nav{
+    padding:14px 7vw;
+  }
+
+  .navlinks{
+    position:absolute;
+    top:64px;
+    left:7vw;
+    right:7vw;
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    padding:12px;
+    background:rgba(22,34,42,.98);
+    border:1px solid var(--line);
+    border-radius:14px;
+    backdrop-filter:blur(12px);
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(-8px);
+    transition:.25s;
+  }
+
+  .navlinks.open{
+    opacity:1;
+    pointer-events:auto;
+    transform:translateY(0);
+  }
+
+  .navlinks a{
+    padding:13px 12px;
+    border-radius:10px;
+    font-size:13px;
+  }
+
+  .navlinks a:hover{
+    background:var(--ink-2);
+    color:var(--cyan);
+  }
+
+  .navcta{
+    display:none;
+  }
+
+  .statrow,.bricks,.demo,.secgrid,.tiers,.maprow{
+    grid-template-columns:1fr;
+  }
+
+  section{
+    padding:80px 7vw;
+  }
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+
 </style>
 </head>
 <body>
@@ -389,7 +442,29 @@ footer{padding:36px 8vw;border-top:1px solid var(--line);display:flex;justify-co
 /* nav scroll state */
 const nav=document.getElementById('nav');
 addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
-document.getElementById('burger').onclick=()=>location.hash='#defi';
+const burger=document.getElementById('burger');
+const navlinks=document.querySelector('.navlinks');
+
+if(burger && navlinks){
+  burger.onclick=()=>{
+    navlinks.classList.toggle('open');
+    burger.textContent=navlinks.classList.contains('open') ? '×' : '☰';
+  };
+
+  navlinks.querySelectorAll('a').forEach(link=>{
+    link.onclick=()=>{
+      navlinks.classList.remove('open');
+      burger.textContent='☰';
+    };
+  });
+
+  document.addEventListener('click',(e)=>{
+    if(!nav.contains(e.target) && navlinks.classList.contains('open')){
+      navlinks.classList.remove('open');
+      burger.textContent='☰';
+    }
+  });
+}
 
 /* reveal on scroll */
 const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.18});
