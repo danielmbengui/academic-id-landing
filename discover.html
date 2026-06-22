@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ACADEMIC ID — Trois miroirs d'une même identité</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+:root{
+  --ink:#0D1316;--ink2:#111A1F;--panel:#16222A;--panel2:#1B2A33;--line:#263A45;
+  --cyan:#2BD4D9;--cyand:#1A8C90;--gold:#D9A441;--bone:#EAF1F2;--muted:#8FA4AD;
+  --green:#46D38A;--red:#E5604D;--violet:#9B8CFF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:radial-gradient(circle at 50% -10%,#13212a,#0D1316 60%);
+  color:var(--bone);min-height:100vh;-webkit-font-smoothing:antialiased;padding:26px 4vw 60px}
+.head{text-align:center;max-width:680px;margin:0 auto 8px}
+.head .eyebrow{font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.head h1{font-family:'Space Grotesk';font-weight:700;font-size:27px;letter-spacing:-.01em}
+.head p{color:var(--muted);font-size:14px;margin-top:8px;line-height:1.5}
+
+/* shared identity strip */
+.idstrip{max-width:560px;margin:18px auto 26px;background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:14px 18px;display:flex;align-items:center;gap:14px}
+.idstrip .av{width:44px;height:44px;border-radius:10px;overflow:hidden;border:1px solid var(--line);flex:none}
+.idstrip .nm{font-family:'Space Grotesk';font-weight:600;font-size:15px}
+.idstrip .mt{font-family:'IBM Plex Mono';font-size:11px;color:var(--muted);margin-top:2px}
+.idstrip .tag{margin-left:auto;font-family:'IBM Plex Mono';font-size:10px;color:var(--gold);border:1px solid rgba(217,164,65,.4);padding:5px 10px;border-radius:8px;text-align:center}
+
+/* mirrors row */
+.mirrors{display:grid;grid-template-columns:repeat(3,minmax(330px,1fr));gap:18px;max-width:1160px;margin:0 auto}
+.mirror{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;height:600px}
+.mhead{padding:16px 18px;border-bottom:1px solid var(--line);position:relative}
+.mhead::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px}
+.mirror.eleve .mhead::before{background:var(--cyan)}
+.mirror.proviseur .mhead::before{background:var(--gold)}
+.mirror.ministere .mhead::before{background:var(--violet)}
+.mhead .role{display:flex;align-items:center;gap:9px}
+.mhead .role .ic{font-size:18px}
+.mhead .role b{font-family:'Space Grotesk';font-weight:600;font-size:15px}
+.mhead .see{font-size:11px;color:var(--muted);margin-top:5px}
+
+.mtabs{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--ink2)}
+.mtab{flex:1;background:none;border:1px solid transparent;color:var(--muted);font-size:10px;font-family:'IBM Plex Mono';
+  padding:6px 3px;border-radius:8px;cursor:pointer;transition:.2s}
+.mtab.on{color:var(--bone);border-color:var(--line);background:var(--panel)}
+.mirror.eleve .mtab.on{color:var(--cyan)}
+.mirror.proviseur .mtab.on{color:var(--gold)}
+.mirror.ministere .mtab.on{color:var(--violet)}
+
+.mbody{flex:1;overflow-y:auto;padding:16px}
+.mbody::-webkit-scrollbar{width:5px}.mbody::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.mview{display:none;animation:fade .3s}.mview.on{display:block}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* shared bits */
+.row{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border:1px solid var(--line);border-radius:10px;margin-bottom:9px;background:var(--ink2)}
+.row .l{font-size:12px;color:var(--muted)}
+.row .r{font-family:'Space Grotesk';font-weight:600;font-size:13px}
+.row.locked{border-style:dashed;opacity:.85}
+.row.locked .r{color:var(--muted);font-weight:500;font-size:11px;font-family:'IBM Plex Mono'}
+.vis{font-family:'IBM Plex Mono';font-size:9px;margin-top:2px}
+.vis.ok{color:var(--green)}.vis.no{color:var(--muted)}.vis.agg{color:var(--gold)}
+
+.idcard{aspect-ratio:1.58/1;border-radius:14px;position:relative;background:linear-gradient(135deg,#16323a,#0f2026);border:1px solid var(--cyand);padding:13px;margin-bottom:12px;overflow:hidden}
+.idcard .ct{display:flex;justify-content:space-between}
+.idcard .ct b{font-family:'Space Grotesk';font-size:10px;color:var(--gold);letter-spacing:.1em}
+.idcard .chip{width:24px;height:16px;border-radius:3px;background:linear-gradient(135deg,var(--gold),#b07e2a)}
+.idcard .mid{display:flex;gap:10px;margin-top:10px;align-items:center}
+.idcard .av{width:46px;height:46px;border-radius:9px;overflow:hidden;border:1px solid var(--line);flex:none}
+.idcard .nm{font-family:'Space Grotesk';font-weight:600;font-size:13px}
+.idcard .dt{font-family:'IBM Plex Mono';font-size:9px;color:var(--muted);margin-top:2px;line-height:1.4}
+.idcard .blood{position:absolute;bottom:11px;left:13px;color:var(--red);font-family:'Space Grotesk';font-weight:700;font-size:12px}
+.idcard .qr{position:absolute;bottom:9px;right:9px;width:42px;height:42px;border-radius:6px;background:#0b1115;border:1px solid var(--cyand);display:grid;place-items:center}
+
+.bigblood{text-align:center;border:1px solid var(--red);border-radius:12px;padding:14px;margin-bottom:10px;background:linear-gradient(135deg,rgba(229,96,77,.12),var(--ink2))}
+.bigblood .v{font-family:'Space Grotesk';font-weight:700;font-size:32px;color:var(--red);line-height:1}
+.bigblood .k{color:var(--muted);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-top:5px}
+
+.lockcard{border:1px dashed var(--line);border-radius:12px;padding:18px;text-align:center;background:var(--ink2);margin-bottom:10px}
+.lockcard .ic{font-size:22px;opacity:.7}
+.lockcard .t{font-family:'Space Grotesk';font-weight:600;font-size:13px;margin-top:6px}
+.lockcard .d{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+
+.kpi{border:1px solid var(--line);border-radius:11px;padding:14px;margin-bottom:9px;background:var(--ink2);position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--violet)}
+.kpi .v{font-family:'Space Grotesk';font-weight:700;font-size:22px}
+.kpi .k{color:var(--muted);font-size:11px;margin-top:4px}
+
+.tl{position:relative;margin-left:6px;padding-left:18px;margin-top:4px}
+.tl::before{content:"";position:absolute;left:4px;top:4px;bottom:4px;width:2px;background:var(--line)}
+.st{position:relative;padding:8px 0}
+.st::before{content:"";position:absolute;left:-18px;top:11px;width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid var(--green)}
+.st.now::before{background:var(--gold);border-color:var(--gold)}
+.st.future::before{background:var(--ink);border-color:var(--line)}
+.st h5{font-family:'Space Grotesk';font-size:12px}
+.st .y{font-family:'IBM Plex Mono';font-size:9px;color:var(--muted)}
+
+.btn{width:100%;font-family:'Space Grotesk';font-weight:600;font-size:13px;border:none;border-radius:10px;padding:11px;cursor:pointer;transition:.2s;margin-top:6px}
+.btn.gold{background:var(--gold);color:var(--ink)}.btn.cyan{background:var(--cyan);color:var(--ink)}
+.btn:active{transform:scale(.98)}.btn:disabled{opacity:.45}
+.qrbox{width:80px;height:80px;border:1px dashed var(--line);border-radius:10px;display:grid;place-items:center;margin:0 auto 12px;position:relative;overflow:hidden;background:var(--ink2)}
+.qrbox.scan::after{content:"";position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 12px var(--gold);animation:beam 1.4s ease}
+@keyframes beam{0%{top:6%}50%{top:88%}100%{top:46%;opacity:0}}
+.vres{font-family:'IBM Plex Mono';font-size:11px;color:var(--muted);text-align:center;min-height:34px;line-height:1.5}
+
+.note{font-size:11px;color:var(--muted);line-height:1.55;margin-top:10px;padding:10px;border-left:2px solid var(--line)}
+.note.v{border-color:var(--violet)}.note.g{border-color:var(--gold)}.note.c{border-color:var(--cyan)}
+
+.footexp{text-align:center;color:var(--muted);font-family:'IBM Plex Mono';font-size:10px;margin-top:22px}
+
+/* civic accordion + vote */
+.civintro{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.civ{border:1px solid var(--line);border-radius:10px;margin-bottom:8px;overflow:hidden;background:var(--ink2)}
+.civ .q{padding:11px 13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Space Grotesk';font-weight:600;font-size:12px}
+.civ .q .x{color:var(--cyan);font-size:15px;transition:.25s;flex:none;margin-left:8px}
+.civ.open .q .x{transform:rotate(45deg)}
+.civ .a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--muted);font-size:11px;line-height:1.55}
+.civ.open .a{max-height:180px;padding:0 13px 12px}
+.civflag{font-family:'IBM Plex Mono';font-size:9.5px;color:var(--muted);line-height:1.5;margin-top:8px;padding:9px;border:1px dashed var(--line);border-radius:8px}
+.votecard{border:1px solid var(--cyand);border-radius:12px;padding:14px;margin-bottom:10px;background:linear-gradient(135deg,rgba(43,212,217,.08),var(--ink2))}
+.votecard .s{font-family:'IBM Plex Mono';font-size:10px;color:var(--green);letter-spacing:.1em}
+.votecard h5{font-family:'Space Grotesk';font-size:14px;margin-top:4px}
+.voteout{font-family:'IBM Plex Mono';font-size:11px;color:var(--muted);text-align:center;min-height:20px;margin-top:8px;line-height:1.5}
+.back-btn{
+  position:fixed;
+  top:22px;
+  left:22px;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  padding:10px 16px;
+  border-radius:10px;
+
+  background:rgba(22,34,42,.92);
+  border:1px solid var(--line);
+
+  color:var(--bone);
+  text-decoration:none;
+
+  font-family:'Space Grotesk';
+  font-weight:600;
+  font-size:13px;
+
+  backdrop-filter:blur(10px);
+  transition:.25s;
+}
+
+.back-btn:hover{
+  border-color:var(--cyan);
+  color:var(--cyan);
+  transform:translateX(-2px);
+  box-shadow:0 10px 25px rgba(43,212,217,.15);
+}
+@media(max-width:1080px){.mirrors{grid-template-columns:repeat(3,minmax(300px,1fr));overflow-x:auto;padding-bottom:10px}}
+@media(max-width:760px){.mirrors{grid-template-columns:1fr;overflow:visible}.mirror{height:auto;max-height:560px}}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div class="eyebrow">Trois miroirs · une seule identité</div>
+  <h1>La même carte, reflétée selon qui regarde</h1>
+  <p>Élève, proviseur et ministère explorent la même identité — mais chaque miroir ne révèle que ce que son acteur a le droit de voir. Explorez chaque panneau séparément.</p>
+</div>
+
+<div class="idstrip">
+  <div class="av" id="stripav"></div>
+  <div>
+    <div class="nm">Awa Mbadinga</div>
+    <div class="mt">GA-2024-204871 · Terminale D · Estuaire</div>
+  </div>
+  <div class="tag">IDENTITÉ SOURCE<br>blockchain MINSEC</div>
+</div>
+
+<div class="mirrors">
+
+  <!-- ===== MIROIR ÉLÈVE ===== -->
+  <div class="mirror eleve">
+    <div class="mhead">
+      <div class="role"><span class="ic">🎓</span><b>Élève</b></div>
+      <div class="see">Voit tout sur lui — y compris ses données privées.</div>
+    </div>
+    <div class="mtabs">
+      <button class="mtab on" data-mt="e1">Carte</button>
+      <button class="mtab" data-mt="e2">Santé</button>
+      <button class="mtab" data-mt="e3">Bourse</button>
+      <button class="mtab" data-mt="e4">Parcours</button>
+      <button class="mtab" data-mt="e5">Civil</button>
+      <button class="mtab" data-mt="e6">Vote</button>
+    </div>
+    <div class="mbody">
+      <div class="mview on" data-mv="e1">
+        <div class="idcard">
+          <div class="ct"><b>ACADEMIC ID</b><div class="chip"></div></div>
+          <div class="mid"><div class="av" id="cav"></div><div><div class="nm">Awa Mbadinga</div><div class="dt">GA-2024-204871<br>Terminale D · Libreville</div></div></div>
+          <div class="blood">🩸 O+</div>
+          <div class="qr"><canvas id="qr" width="36" height="36"></canvas></div>
+        </div>
+        <div class="row"><div><div class="l">Niveau</div></div><div class="r">Terminale D</div></div>
+        <div class="row"><div><div class="l">Établissement</div></div><div class="r">Lycée d'État</div></div>
+      </div>
+      <div class="mview" data-mv="e2">
+        <div class="bigblood"><div class="v">O+</div><div class="k">Groupe sanguin</div></div>
+        <div class="row"><div><div class="l">Allergies</div><div class="vis ok">visible par vous</div></div><div class="r">Pénicilline</div></div>
+        <div class="row"><div><div class="l">Vaccins</div><div class="vis ok">visible par vous</div></div><div class="r" style="color:var(--green)">À jour</div></div>
+        <div class="row"><div><div class="l">Contact urgence</div><div class="vis ok">privé</div></div><div class="r">+241 ·· 14</div></div>
+        <div class="note c">Ces données ne sont visibles que par vous. En urgence, un soignant autorisé y accède 10 s — chaque accès est tracé.</div>
+      </div>
+      <div class="mview" data-mv="e3">
+        <div class="row"><div><div class="l">Bourse d'excellence</div><div class="vis ok">privé</div></div><div class="r">150 000/trim.</div></div>
+        <div class="row"><div><div class="l">Financement</div></div><div class="r" style="color:var(--gold)">F.N.E.F</div></div>
+        <div class="row"><div><div class="l">Frais 2024</div></div><div class="r" style="color:var(--green)">Apurés ✓</div></div>
+        <div class="note c">Le montant de votre bourse est une donnée personnelle : ni le proviseur ni le ministère ne le voient nominativement.</div>
+      </div>
+      <div class="mview" data-mv="e4">
+        <div class="tl">
+          <div class="st"><h5>Maternelle</h5><div class="y">2009–2011 · scellé</div></div>
+          <div class="st"><h5>Primaire</h5><div class="y">2011–2017 · scellé</div></div>
+          <div class="st"><h5>Collège · BEPC</h5><div class="y">2017–2021 · diplôme ✓</div></div>
+          <div class="st now"><h5>Lycée — Tle D</h5><div class="y">2021–2024 · en cours</div></div>
+          <div class="st future"><h5>Baccalauréat</h5><div class="y">2024 · inscrite</div></div>
+        </div>
+      </div>
+
+      <div class="mview" data-mv="e5">
+        <div class="civintro">Un compagnon civique qui accompagne l'élève tout au long de son parcours — les repères du Code civil gabonais.</div>
+        <div class="civ"><div class="q">L'état civil <span class="x">+</span></div><div class="a">Tout enfant doit être déclaré à l'état civil. L'acte de naissance est la première identité : il ouvre l'accès à l'école, aux examens et aux droits civiques.</div></div>
+        <div class="civ"><div class="q">La nationalité gabonaise <span class="x">+</span></div><div class="a">La nationalité s'acquiert principalement par filiation. Elle conditionne de nombreux droits, dont le droit de vote et l'accès à certaines fonctions.</div></div>
+        <div class="civ"><div class="q">La majorité civile — 18 ans <span class="x">+</span></div><div class="a">À 18 ans, la personne devient majeure : elle exerce pleinement ses droits civils et assume ses responsabilités.</div></div>
+        <div class="civ"><div class="q">Le droit de vote <span class="x">+</span></div><div class="a">Le citoyen inscrit peut voter à partir de 18 ans. La carte ACADEMIC ID prépare ce passage de l'élève au citoyen électeur.</div></div>
+        <div class="civ"><div class="q">Droits & devoirs de l'élève <span class="x">+</span></div><div class="a">Droit à l'éducation et à la protection ; devoir d'assiduité, de respect et de civisme envers la communauté scolaire.</div></div>
+        <div class="civ"><div class="q">Protection des mineurs <span class="x">+</span></div><div class="a">Le mineur bénéficie d'une protection renforcée de sa personne et de ses données — c'est pourquoi ses informations sensibles restent privées.</div></div>
+        <div class="civflag">⚠ Informations indicatives à visée éducative. Les dispositions exactes figurent dans le Code civil gabonais et les textes en vigueur.</div>
+      </div>
+
+      <div class="mview" data-mv="e6">
+        <div class="votecard">
+          <div class="s">✓ ÉLIGIBLE</div>
+          <h5>Awa Mbadinga · 18 ans</h5>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Inscrite sur les listes · identité vérifiée sur la blockchain</div>
+        </div>
+        <div class="row"><div><div class="l">Scrutin</div></div><div class="r">Élection nationale</div></div>
+        <div class="row"><div><div class="l">Mode</div></div><div class="r">Vérifié & secret</div></div>
+        <button class="btn cyan" id="btnVote">🗳️ Voter</button>
+        <div class="voteout" id="voteOut">Un électeur = une voix. Sans fraude ni doublon.</div>
+        <div class="note c">Le vote est <b>secret</b> : ni le ministère, ni le proviseur, ni quiconque ne peut savoir pour qui vous votez. Seule la participation est vérifiable. La même carte vous accompagne de la maternelle au statut de citoyen électeur.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MIROIR PROVISEUR ===== -->
+  <div class="mirror proviseur">
+    <div class="mhead">
+      <div class="role"><span class="ic">🏫</span><b>Proviseur</b></div>
+      <div class="see">Pilote sa classe. Pas d'accès au médical ni aux bourses.</div>
+    </div>
+    <div class="mtabs">
+      <button class="mtab on" data-mt="p1">Fiche</button>
+      <button class="mtab" data-mt="p2">Vérifier</button>
+      <button class="mtab" data-mt="p3">Classe</button>
+    </div>
+    <div class="mbody">
+      <div class="mview on" data-mv="p1">
+        <div class="row"><div><div class="l">Élève</div><div class="vis ok">accès</div></div><div class="r">Awa Mbadinga</div></div>
+        <div class="row"><div><div class="l">Matricule</div></div><div class="r">GA-2024-204871</div></div>
+        <div class="row"><div><div class="l">Niveau</div></div><div class="r">Terminale D</div></div>
+        <div class="row"><div><div class="l">BEPC</div><div class="vis ok">diplôme vérifié</div></div><div class="r" style="color:var(--green)">Obtenu ✓</div></div>
+        <div class="row locked"><div><div class="l">🔒 Groupe sanguin / santé</div><div class="vis no">non accessible</div></div><div class="r">privé élève</div></div>
+        <div class="row locked"><div><div class="l">🔒 Montant de bourse</div><div class="vis no">non accessible</div></div><div class="r">admin. financière</div></div>
+        <div class="note g">Le proviseur confirme identité, niveau et diplômes — mais la santé et le détail des bourses restent invisibles pour lui.</div>
+      </div>
+      <div class="mview" data-mv="p2">
+        <div class="qrbox" id="qrbox"><canvas id="qr2" width="60" height="60"></canvas></div>
+        <button class="btn gold" id="btnScan">Scanner & vérifier la carte</button>
+        <div class="vres" id="vres" style="margin-top:10px">En attente de scan…</div>
+      </div>
+      <div class="mview" data-mv="p3">
+        <div class="kpi" style="--violet:var(--gold)"><div class="v">1 240</div><div class="k">Élèves inscrits</div></div>
+        <div class="kpi"><div class="v">312</div><div class="k">Candidats Bac 2024</div></div>
+        <div class="kpi"><div class="v">76,9 %</div><div class="k">Réussite de l'établissement</div></div>
+        <div class="kpi"><div class="v">8,5 M</div><div class="k">Dotation maintenance — F.N.E.F</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MIROIR MINISTÈRE ===== -->
+  <div class="mirror ministere">
+    <div class="mhead">
+      <div class="role"><span class="ic">🏛️</span><b>Ministère</b></div>
+      <div class="see">Ne voit que des statistiques agrégées et anonymisées.</div>
+    </div>
+    <div class="mtabs">
+      <button class="mtab on" data-mt="m1">National</button>
+      <button class="mtab" data-mt="m2">Cet élève</button>
+    </div>
+    <div class="mbody">
+      <div class="mview on" data-mv="m1">
+        <div class="kpi"><div class="v" data-count="561211">0</div><div class="k">Élèves suivis</div></div>
+        <div class="kpi"><div class="v" data-count="18450">0</div><div class="k">Bacheliers 2024</div></div>
+        <div class="kpi"><div class="v">72,4 %</div><div class="k">Taux de réussite au Bac</div></div>
+        <div class="kpi"><div class="v" data-count="7030">0</div><div class="k">En échec / réorientation</div></div>
+        <div class="note v">Données de démonstration. La base nationale alimente ces statistiques automatiquement, sans saisie manuelle.</div>
+      </div>
+      <div class="mview" data-mv="m2">
+        <div class="lockcard"><div class="ic">🙈</div><div class="t">Identité masquée</div><div class="d">Le ministère ne voit jamais le nom, la photo ni la santé. L'élève n'existe que comme point de donnée.</div></div>
+        <div class="row"><div><div class="l">Contribue à</div><div class="vis agg">agrégé</div></div><div class="r">Effectif Tle D</div></div>
+        <div class="row"><div><div class="l">Province</div><div class="vis agg">cartographie</div></div><div class="r">Estuaire</div></div>
+        <div class="row"><div><div class="l">Statut</div><div class="vis agg">statistique</div></div><div class="r">Bachelier potentiel</div></div>
+        <div class="row locked"><div><div class="l">🔒 Nom / photo / santé</div><div class="vis no">jamais collecté</div></div><div class="r">—</div></div>
+        <div class="note v">Souveraineté & protection des mineurs : le pilotage national se fait sur des volumes, jamais sur des individus.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footexp">Chaque miroir est explorable indépendamment — naviguez dans ses onglets sans affecter les autres.</div>
+
+<script>
+/* avatars */
+const AV=`<svg viewBox="0 0 46 46" width="100%" height="100%"><rect width="46" height="46" fill="#11202a"/>
+ <circle cx="23" cy="17" r="9.5" fill="#8a5a3c"/><path d="M13 17 q-1.5 -10 10 -10 q11.5 0 10 10 q-3 -5 -10 -5 q-7 0 -10 5Z" fill="#2a1c12"/>
+ <path d="M7 46 q3 -13 16 -13 q13 0 16 13Z" fill="#7a4d2e"/><rect x="17" y="30" width="12" height="6" fill="#8a5a3c"/></svg>`;
+document.getElementById('stripav').innerHTML=AV;
+document.getElementById('cav').innerHTML=AV;
+
+/* QR */
+function drawQR(cv,seed){const ctx=cv.getContext('2d');const N=9,s=cv.width/N;ctx.clearRect(0,0,cv.width,cv.height);
+  let h=seed||7;ctx.fillStyle='#2BD4D9';
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){h=(h*1103515245+12345)&0x7fffffff;if(h>>7&1)ctx.fillRect(x*s,y*s,s,s);}
+  ctx.fillStyle='#D9A441';[[0,0],[N-3,0],[0,N-3]].forEach(([cx,cy])=>{ctx.fillRect(cx*s,cy*s,3*s,3*s);ctx.fillStyle='#0b1115';ctx.fillRect((cx+1)*s,(cy+1)*s,s,s);ctx.fillStyle='#D9A441';});}
+drawQR(document.getElementById('qr'),21);
+drawQR(document.getElementById('qr2'),21);
+
+/* per-mirror tab switching (scoped) */
+document.querySelectorAll('.mirror').forEach(m=>{
+  m.querySelectorAll('.mtab').forEach(t=>t.onclick=()=>{
+    const k=t.dataset.mt;
+    m.querySelectorAll('.mtab').forEach(x=>x.classList.toggle('on',x===t));
+    m.querySelectorAll('.mview').forEach(v=>v.classList.toggle('on',v.dataset.mv===k));
+    if(k==='m1')runCounters();
+  });
+});
+
+/* counters */
+function runCounters(){
+  document.querySelectorAll('.ministere [data-count]').forEach(el=>{
+    const tgt=+el.dataset.count;let t0=null;
+    function step(ts){if(!t0)t0=ts;const p=Math.min((ts-t0)/1000,1);const e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(tgt*e).toLocaleString('fr-FR');if(p<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  });
+}
+runCounters();
+
+/* proviseur scan */
+document.getElementById('btnScan').onclick=()=>{
+  const box=document.getElementById('qrbox'),res=document.getElementById('vres'),btn=document.getElementById('btnScan');
+  btn.disabled=true;box.classList.add('scan');res.textContent='Lecture eAES®️…';
+  setTimeout(()=>res.textContent='Vérification blockchain…',800);
+  setTimeout(()=>{box.classList.remove('scan');btn.disabled=false;
+    res.innerHTML='<span style="color:var(--green)">✓ Authentique · Awa Mbadinga · Tle D</span><br>Parcours vérifié — santé non accessible';},1600);
+};
+/* civic accordion */
+document.querySelectorAll('.civ .q').forEach(q=>q.onclick=()=>q.parentElement.classList.toggle('open'));
+
+/* vote */
+const vb=document.getElementById('btnVote');
+if(vb) vb.onclick=()=>{
+  const o=document.getElementById('voteOut');vb.disabled=true;
+  o.textContent="Vérification d'éligibilité…";
+  setTimeout(()=>o.textContent='Scrutin en cours…',700);
+  setTimeout(()=>{o.innerHTML='✓ Vote enregistré · anonyme · scellé sur la blockchain<br>Participation confirmée — votre choix reste secret';vb.textContent='✓ Vous avez voté';},1500);
+};
+</script>
+</body>
+<a href="index.html" class="back-btn">
+  ← Retour
+</a>
+</html>
